@@ -1,0 +1,43 @@
+
+---
+- name: Test Connection to my servers
+  hosts: all
+  become: yes
+
+  vars:
+          git0: gitlab-ce
+          git1: gitlab-ce_
+
+  tasks:
+  - name: Ping my servers
+    ping:
+
+  - name: Update_apt_cache
+    apt:
+            update_cache=yes
+
+  - name: Install packages
+    apt: name={{ item }} state=installed
+    loop:
+            - curl
+            - gnupg
+
+  - name: apt-key add
+    shell: curl -L https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey | apt-key add -
+
+  - name: Update_apt_cache
+    apt:
+          update_cache=yes
+
+  - name: Install packages
+    apt: name={{ item }} state=installed
+    loop:
+            - apt-transport-https
+
+  - name: add config file
+    shell: echo deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ xenial main > /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+
+  - name: Install gitlab-ce
+    apt: name={{ git0 }} state=latest
+    
+
