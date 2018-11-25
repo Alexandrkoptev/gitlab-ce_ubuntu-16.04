@@ -9,7 +9,7 @@ The Managed server must have the following version of Linux - Ubuntu 16.04 + ins
 On the Master server -
 
 1) Create user l: alexandrk
-2) Place the key files (id_rsa.pub and id_rsa) and the inventory file (hosts) that were emailed to you (22.11) in the following directories -
+2) Copy the key files (id_rsa.pub and id_rsa) and the inventory file (hosts) that were emailed to you (22.11) in the following directories -
 
 keys (id_rsa.pub id_rsa) - /home/alexandrk/.ssh/
 inventory (hosts) - /etc/ansible/
