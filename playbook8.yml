@@ -1,13 +1,12 @@
 
 ---
-- name: Test Connection to my servers
+- name: Gitlab-ce install
   hosts: all
   become: yes
 
   vars:
           git0: gitlab-ce
-          git1: gitlab-ce_
-
+          
   tasks:
   - name: Ping my servers
     ping:
@@ -17,27 +16,43 @@
             update_cache=yes
 
   - name: Install packages
-    apt: name={{ item }} state=installed
+    apt: name={{ item }} state=present
     loop:
             - curl
             - gnupg
 
   - name: apt-key add
-    shell: curl -L https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey | apt-key add -
+    apt_key:
+            url: https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey
+            state: present
+
+    #    shell: curl -L https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey | apt-key add -
 
   - name: Update_apt_cache
     apt:
           update_cache=yes
 
   - name: Install packages
-    apt: name={{ item }} state=installed
+    apt: name={{ item }} state=present
     loop:
             - apt-transport-https
 
-  - name: add config file
-    shell: echo deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ xenial main > /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+              #  - name: add repository
+  - apt_repository:
+          repo: deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu hardy partner
+          state: present      
+
+              #  - name: add config file
+              #    shell: echo deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ xenial main > /etc/apt/sources.list.d/gitlab_gitlab-ce.list
 
   - name: Install gitlab-ce
-    apt: name={{ git0 }} state=latest
+    apt: name={{ git0 }} state=present
+ 
+  - name: gitlab_reconfigure
+    shell: gitlab-ctl reconfigure
+
+    #  - name: Start gitlab-ce and enable in the boot
+    #    service: name=gitlab-ctl state=started enabled=yes
     
+
 
