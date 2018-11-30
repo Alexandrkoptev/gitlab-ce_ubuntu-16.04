@@ -39,8 +39,9 @@
 
               #  - name: add repository
   - apt_repository:
-          repo: deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu hardy partner
+          repo: deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu {{ ansible_distribution_release }} partner
           state: present      
+         
 
               #  - name: add config file
               #    shell: echo deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ xenial main > /etc/apt/sources.list.d/gitlab_gitlab-ce.list
@@ -49,14 +50,14 @@
     apt: name={{ git0 }} state=present
     
   - name: edit_file  
-    lineinfile:
+    replace:
 
                path: /etc/gitlab/gitlab.rb
-               regexp: '^external_url'
-               line: "'external_url http://gitlab.168.62.50.51'"  
+               regexp: "'external_url http://gitlab.example.com'"
+               replace: "'external_url http://gitlab.{{ ansible_default_ipv4.address }}'"  
  
-  - name: gitlab_reconfigure
-    shell: gitlab-ctl reconfigure
+   - name: gitlab_reconfigure
+     shell: gitlab-ctl reconfigure
 
     #  - name: Start gitlab-ce and enable in the boot
     #    service: name=gitlab-ctl state=started enabled=yes
