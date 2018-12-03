@@ -55,9 +55,12 @@
                path: /etc/gitlab/gitlab.rb
                regexp: "'external_url http://gitlab.example.com'"
                replace: "'external_url http://gitlab.{{ ansible_default_ipv4.address }}'"  
- 
-   - name: gitlab_reconfigure
-     shell: gitlab-ctl reconfigure
+
+  - name: gitlab_reconfigure
+    shell: gitlab-ctl reconfigure
+     
+               #   - name: gitlab_reconfigure
+               #     shell: gitlab-ctl reconfigure
 
     #  - name: Start gitlab-ce and enable in the boot
     #    service: name=gitlab-ctl state=started enabled=yes
